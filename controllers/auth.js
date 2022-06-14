@@ -1,7 +1,8 @@
 const { response } = require('express');
-const usuario = require('../Schemas/usuario');
+const Usuario = require('../Schemas/usuario');
 const bcrypt = require ('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
+const usuario = require('../Schemas/usuario');
 
 const crearUsuario = async (req,res = response) => {
 
@@ -10,7 +11,7 @@ const crearUsuario = async (req,res = response) => {
 
     try {
 
-        const existEmail = await usuario.findOne({email});
+        const existEmail = await Usuario.findOne({email});
         if(existEmail){
             return res.status(400).json({
                 ok:false,
@@ -18,14 +19,14 @@ const crearUsuario = async (req,res = response) => {
             })
         }
 
-        const Usuario = new usuario(req.body);
+        const usuario = new Usuario(req.body);
 
         //encriptar contraseña
 
         const salt =  bcrypt.genSaltSync();
-        Usuario.password = bcrypt.hashSync(password, salt);
+        usuario.password = bcrypt.hashSync(password, salt);
 
-        await Usuario.save();
+        await usuario.save();
 
         //Generar el JWT
 
@@ -33,7 +34,7 @@ const crearUsuario = async (req,res = response) => {
    
        res.json({
            ok:true,
-           Usuario,
+           usuario,
            token
        });
         
@@ -50,7 +51,7 @@ const crearUsuario = async (req,res = response) => {
 
 
 const login = async ( req, res = response ) => {
-    console.log(req.body)
+    //console.log(req.body)
     const { email, password } = req.body;
     
     try {
@@ -99,11 +100,12 @@ const renewToken = async(req, res = response) => {
 
     const token = await generarJWT(uid);
 
-    const Usuario = await usuario.findById(uid);
-
+    const usuario = await Usuario.findById(uid);
+    console.log(req.uid);
+    console.log(usuario);
     res.json({
         ok:true,
-        Usuario,
+        usuario,
        token
     })
 }

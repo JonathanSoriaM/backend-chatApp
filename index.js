@@ -30,6 +30,9 @@ app.use( express.static( publicPath ) );
 //Rutas 
 
 app.use('/api/login',require('./Routes/auth'));
+app.use('/api/usuarios',require('./Routes/usuarios'));
+app.use('/api/mensajes',require('./Routes/mensajes'));
+
 
 
 server.listen( process.env.PORT, ( err ) => {

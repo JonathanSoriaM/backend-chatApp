@@ -22,6 +22,21 @@ jwt.sign(payload , process.env.JWT_KEY,{
     
 }
 
+const comprobarJWK = (token = '')  => {
+
+    try {
+
+        const { uid } = jwt.verify(token,process.env.JWT_KEY);
+      
+      
+       return [ true,uid ];
+        
+    } catch (error) {
+        return [false, null];
+    }
+}
+
 module.exports = {
-    generarJWT
+    generarJWT ,
+    comprobarJWK
 }
